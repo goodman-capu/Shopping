@@ -36,9 +36,18 @@ class DSDRequestAdminHandler{
                 DSDRequestResponder::http_code(404, false);
                 DSDRequestResponder::respond(false, "类别不存在");
             }
-            if (!json_decode($GLOBALS["data"]["info"], true)) {
+            $info = json_decode($GLOBALS["data"]["info"], true);
+            if (!$info) {
                 DSDRequestResponder::http_code(400, false);
                 DSDRequestResponder::respond(false, "信息格式错误");
+            }else {
+                foreach ($info as $key => $item) {
+                    $number = $item["remains"];
+                    if (!is_numeric($number) || $number <= 0) {
+                        DSDRequestResponder::http_code(400, false);
+                        DSDRequestResponder::respond(false, "剩余库存错误");
+                    }
+                }
             }
         }
         
